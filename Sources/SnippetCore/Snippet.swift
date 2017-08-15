@@ -19,14 +19,14 @@ public final class Snippet {
         }
     }
 
-    lazy var dateFormatter: DateFormatter = {
+    private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter
     }()
 
-    lazy var calendar: Calendar = {
+    private lazy var calendar: Calendar = {
         var calendar = Calendar.current
         calendar.firstWeekday = 2 // Monday is the first weekday.
         return calendar
@@ -71,7 +71,7 @@ public final class Snippet {
                 """
                 Please add your personal access token in Githug.
                 In Github, you can generate a token in Personal settings > Personal access tokens.
-                Please add the token by executing `snippet --token "YOUR_PERSONAL_ACCESS_TOKEN"`
+                Please add the token by executing `snippet [YOUR_ORGANIZATION] --token [YOUR_PERSONAL_ACCESS_TOKEN]`
                 """
             )
             return
@@ -98,7 +98,9 @@ public final class Snippet {
         }
         urlComponents.query =
             """
-            q=+type:pr+author:\(userName)
+            q=
+            +type:pr
+            +author:\(userName)
             +org:\(organization)
             +created:\(startDateString)..\(endDateString)
             +updated:\(startDateString)..\(endDateString)
@@ -122,7 +124,9 @@ public final class Snippet {
         loadRequest(request)
     }
 
-    func loadRequest(_ request: URLRequest) {
+    // - MARK: Private methods
+
+    private func loadRequest(_ request: URLRequest) {
         let semaphore = DispatchSemaphore(value: 0)
         let task = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) -> Void in
             guard let response = response as? HTTPURLResponse, let data = data else {
@@ -149,8 +153,6 @@ public final class Snippet {
         task.resume()
         semaphore.wait()
     }
-
-    // - MARK: Private methods
 
     private func printHelp() {
         print(
