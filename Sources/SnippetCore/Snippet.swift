@@ -37,16 +37,14 @@ public final class Snippet {
     }
 
     public func run() throws {
-        guard arguments.count > 1 else {
-            printHelp()
-            return
-        }
-
+        /// Set default parameters
         var weekNumber = -1
+        var organization = ""
 
+        /// Check arguments and options
         var expectingWeekNumber = false
         var expectingAccessToken = false
-        for argument in arguments[2..<arguments.count] {
+        for argument in arguments[1..<arguments.count] {
             if expectingWeekNumber {
                 weekNumber = Int(argument) ?? weekNumber
             }
@@ -55,9 +53,16 @@ public final class Snippet {
             }
 
             switch argument {
+            case "help":
+                printHelp()
+                return
+            case let x where !x.hasPrefix("--") && !expectingWeekNumber && !expectingAccessToken:
+                organization = x
             case "--week":
                 expectingWeekNumber = true
+                expectingAccessToken = false
             case "--token":
+                expectingWeekNumber = false
                 expectingAccessToken = true
             default:
                 expectingWeekNumber = false
@@ -67,19 +72,12 @@ public final class Snippet {
         }
 
         guard let accessToken = self.accessToken else {
-            print(
-                """
-                Please add your personal access token in Githug.
-                In Github, you can generate a token in Personal settings > Personal access tokens.
-                Please add the token by executing `snippet [YOUR_ORGANIZATION] --token [YOUR_PERSONAL_ACCESS_TOKEN]`
-                """
-            )
+            printErrorForAccessToken()
             return
         }
 
-        let organization = arguments[1]
+        /// Get elements for query.
         let userName = try Process().launchBash(with: "git config github.user")
-
         let now = Date()
 
         var components = calendar.dateComponents([.weekOfYear, .yearForWeekOfYear], from: now)
@@ -96,18 +94,26 @@ public final class Snippet {
         guard var urlComponents = URLComponents(string: "https://api.github.com/search/issues") else {
             return
         }
-        urlComponents.query =
-            """
-            q=
-            +type:pr
-            +author:\(userName)
-            +org:\(organization)
-            +created:\(startDateString)..\(endDateString)
-            +updated:\(startDateString)..\(endDateString)
-            """
+
+        var query =
+        """
+        q=
+        +type:pr
+        +author:\(userName)
+        """
+        if !organization.isEmpty {
+            query += "+org:\(organization)"
+        }
+        query +=
+        """
+        +created:\(startDateString)..\(endDateString)
+        +updated:\(startDateString)..\(endDateString)
+        """
+        urlComponents.query = query
+
         print(
             """
-            \(startDateString) ~ \(endDateString)
+            \(startDateString) ~ \(endDateString) in \(!organization.isEmpty ? organization : "all repositories")
             ---------------------------------------
             """
         )
@@ -128,7 +134,7 @@ public final class Snippet {
 
     private func loadRequest(_ request: URLRequest) {
         let semaphore = DispatchSemaphore(value: 0)
-        let task = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) -> Void in
+        URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) -> Void in
             guard let response = response as? HTTPURLResponse, let data = data else {
                 assertionFailure("Invalid response or data.")
                 return
@@ -149,8 +155,7 @@ public final class Snippet {
                 debugPrint(error)
             }
             semaphore.signal()
-        }
-        task.resume()
+        }.resume()
         semaphore.wait()
     }
 
@@ -162,12 +167,25 @@ public final class Snippet {
             Quickly extract your specific Github PRs with links last week (or earlier than last week) to markdown formats.
 
             Usage:
-            - Specify an organization in Github.
-            - Pass a past week number using the `--week`. The default is `-1`.
+            - Specify an organization in Github. (The default is your all repositories.)
+            - Pass a past week number using the `--week`. (The default is `-1`)
+            - Register your access token for repo (Full control of private repositories) in Github using the `--token` at first.
 
             Examples:
-            - snippet Hoge
-            - snippet Hoge --week -4
+            - snippet --week 0
+            - snippet Org
+            - snippet Org --week -4
+            - snippet Org --token [YOUR_PERSONAL_ACCESS_TOKEN]
+            """
+        )
+    }
+
+    private func printErrorForAccessToken() {
+        print(
+            """
+            Please add your personal access token for repo (Full control of private repositories) in Github.
+            In Github, you can generate a token for repo in Personal settings > Personal access tokens.
+            Please add the token by executing `snippet --token [YOUR_PERSONAL_ACCESS_TOKEN]` at first.
             """
         )
     }
