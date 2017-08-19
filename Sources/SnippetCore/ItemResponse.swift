@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ItemResponse: Codable {
+public struct ItemResponse: Codable {
     private enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"
         case incompleteResults = "incomplete_results"
