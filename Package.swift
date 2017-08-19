@@ -13,6 +13,7 @@ let package = Package(
         .target(
             name: "SnippetCore"),
         .testTarget(
-            name: "SnippetTests")
+            name: "SnippetTests",
+            dependencies: ["SnippetCore"])
     ]
 )
