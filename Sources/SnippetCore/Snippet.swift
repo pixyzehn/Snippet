@@ -37,11 +37,11 @@ public final class Snippet {
     }
 
     public func run() throws {
-        /// Set default parameters
+        /// Set default parameters.
         var weekNumber = -1
         var organization = ""
 
-        /// Check arguments and options
+        /// Check arguments and options.
         var expectingWeekNumber = false
         var expectingAccessToken = false
         for argument in arguments[1..<arguments.count] {
@@ -119,6 +119,7 @@ public final class Snippet {
         )
 
         guard let url = urlComponents.url else {
+            debugPrint("No URL from the URLComponents.")
             return
         }
 
@@ -127,14 +128,18 @@ public final class Snippet {
         request.addValue("application/vnd.github.v3.text-match+json", forHTTPHeaderField: "Accept")
         request.httpMethod = "GET"
 
-        loadRequest(request)
+        loadRequest(request) { [weak self] itemResponse in
+            if let itemResponse = itemResponse, let output = self?.generateOutput(itemResponse) {
+                print(output)
+            }
+        }
     }
 
-    // - MARK: Private methods
+    // - MARK: Public methods
 
-    private func loadRequest(_ request: URLRequest) {
+    public func loadRequest(_ request: URLRequest, completion: @escaping (ItemResponse?) -> Void) {
         let semaphore = DispatchSemaphore(value: 0)
-        URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) -> Void in
+        URLSession.shared.dataTask(with: request) { data, response, error -> Void in
             guard let response = response as? HTTPURLResponse, let data = data else {
                 assertionFailure("Invalid response or data.")
                 return
@@ -144,20 +149,48 @@ public final class Snippet {
                 debugPrint("Statu code: \(response.statusCode)")
             }
 
-            do {
-                let itemResponse = try JSONDecoder().decode(ItemResponse.self, from: data)
-                self?.printOutput(itemResponse)
-            } catch {
-                debugPrint(error)
-            }
-
             if let error = error {
                 debugPrint(error)
+                completion(nil)
+            }
+
+            do {
+                let itemResponse = try JSONDecoder().decode(ItemResponse.self, from: data)
+                completion(itemResponse)
+            } catch {
+                debugPrint(error)
+                completion(nil)
             }
             semaphore.signal()
         }.resume()
         semaphore.wait()
     }
+
+    public func generateOutput(_ itemResponse: ItemResponse, isShownDate: Bool = false) -> String {
+        let items = itemResponse.items
+
+        var output = ""
+        output += "Total count: \(itemResponse.totalCount)\n"
+
+        for (index, item) in items.enumerated() {
+            var repositoryURL = item.repositoryURL
+            let count = "https://api.github.com/repos/".count
+            let range = repositoryURL.startIndex..<repositoryURL.index(repositoryURL.startIndex, offsetBy: count)
+            repositoryURL.removeSubrange(range)
+
+            output += "* [\(repositoryURL)] [#\(item.number)](\(item.url)) \(item.title)"
+
+            if isShownDate {
+                output += " - creaated_at: \(item.createdAt), updated_at: \(item.updatedAt)"
+            }
+            if index >= 0 && index != (items.count - 1) {
+                output += "\n"
+            }
+        }
+        return output
+    }
+
+    // - MARK: Private methods
 
     private func printHelp() {
         print(
@@ -188,25 +221,5 @@ public final class Snippet {
             Please add the token by executing `snippet --token [YOUR_PERSONAL_ACCESS_TOKEN]` at first.
             """
         )
-    }
-
-    private func printOutput(_ itemResponse: ItemResponse, isShownDate: Bool = false) {
-        let items = itemResponse.items
-
-        print("Total count: \(itemResponse.totalCount)")
-
-        for item in items {
-            var repositoryURL = item.repositoryURL
-            let count = "https://api.github.com/repos/".count
-            let range = repositoryURL.startIndex..<repositoryURL.index(repositoryURL.startIndex, offsetBy: count)
-            repositoryURL.removeSubrange(range)
-
-            var output = "* [\(repositoryURL)] [#\(item.number)](\(item.url)) \(item.title)"
-            if isShownDate {
-                output += " - creaated_at: \(item.createdAt), updated_at: \(item.updatedAt)"
-            }
-
-            print(output)
-        }
     }
 }
