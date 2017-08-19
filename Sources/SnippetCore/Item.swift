@@ -8,6 +8,7 @@
 import Foundation
 
 struct Item: Codable {
+    // swiftlint:disable identifier_name
     private enum CodingKeys: String, CodingKey {
         case id
         case number

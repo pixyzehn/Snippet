@@ -1,0 +1,5 @@
+disabled_rules:
+  - line_length # (6) 
+  - cyclomatic_complexity # (1) 
+  - function_body_length # (1) 
+

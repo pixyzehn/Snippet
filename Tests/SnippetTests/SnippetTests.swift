@@ -68,7 +68,7 @@ class SnippetTests: XCTestCase {
 extension SnippetTests {
     static var allTests: [(String, (SnippetTests) -> () throws -> Void)] {
         return [
-            ("testPrintingOutput", testPrintingOutput),
+            ("testPrintingOutput", testPrintingOutput)
         ]
     }
 }
