@@ -23,6 +23,6 @@ struct Item: Codable {
     let title: String
     let url: String
     let repositoryURL: String
-    let createdAt: String
-    let updatedAt: String
+    let createdAt: Date
+    let updatedAt: Date
 }

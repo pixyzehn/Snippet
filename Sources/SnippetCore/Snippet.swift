@@ -155,7 +155,15 @@ public final class Snippet {
             }
 
             do {
-                let itemResponse = try JSONDecoder().decode(ItemResponse.self, from: data)
+                let decoder = JSONDecoder()
+                if #available(OSX 10.12, *) {
+                    decoder.dateDecodingStrategy = .iso8601
+                } else {
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+                    decoder.dateDecodingStrategy = .formatted(dateFormatter)
+                }
+                let itemResponse = try decoder.decode(ItemResponse.self, from: data)
                 completion(itemResponse)
             } catch {
                 debugPrint(error)
@@ -167,7 +175,7 @@ public final class Snippet {
     }
 
     public func generateOutput(_ itemResponse: ItemResponse, isShownDate: Bool = false) -> String {
-        let items = itemResponse.items
+        let items = itemResponse.items.sorted(by: { $0.createdAt > $1.createdAt })
 
         var output = ""
         output += "Total count: \(itemResponse.totalCount)\n"
