@@ -3,3 +3,7 @@ disabled_rules:
   - cyclomatic_complexity # (1) 
   - function_body_length # (1) 
 
+identifier_name:
+  excluded:
+    - id
+
