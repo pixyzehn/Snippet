@@ -26,6 +26,14 @@ public final class Snippet {
         return dateFormatter
     }()
 
+    private lazy var uiDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        dateFormatter.dateFormat = "E MMM d"
+        return dateFormatter
+    }()
+
     private lazy var calendar: Calendar = {
         var calendar = Calendar.current
         calendar.firstWeekday = 2 // Monday is the first weekday.
@@ -174,11 +182,11 @@ public final class Snippet {
         semaphore.wait()
     }
 
-    public func generateOutput(_ itemResponse: Issues, isShownDate: Bool = false) -> String {
+    public func generateOutput(_ itemResponse: Issues) -> String {
         let items = itemResponse.items.sorted(by: { $0.createdAt > $1.createdAt })
 
         var output = ""
-        output += "Total count: \(itemResponse.totalCount)\n"
+        output += "Total count: \(itemResponse.totalCount)\n\n"
 
         for (index, item) in items.enumerated() {
             var repositoryURL = item.repositoryURL
@@ -186,11 +194,10 @@ public final class Snippet {
             let range = repositoryURL.startIndex..<repositoryURL.index(repositoryURL.startIndex, offsetBy: count)
             repositoryURL.removeSubrange(range)
 
-            output += "* [\(repositoryURL)] [#\(item.number)](\(item.url)) \(item.title)"
+            let dateString = uiDateFormatter.string(from: item.updatedAt)
 
-            if isShownDate {
-                output += " - creaated_at: \(item.createdAt), updated_at: \(item.updatedAt)"
-            }
+            output += "* [*\(dateString)*] [\(repositoryURL)] [#\(item.number)](\(item.url)) \(item.title)"
+
             if index >= 0 && index != (items.count - 1) {
                 output += "\n"
             }
