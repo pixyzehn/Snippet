@@ -137,7 +137,7 @@ public final class Snippet {
 
     // - MARK: Public methods
 
-    public func loadRequest(_ request: URLRequest, completion: @escaping (ItemResponse?) -> Void) {
+    public func loadRequest(_ request: URLRequest, completion: @escaping (Issues?) -> Void) {
         let semaphore = DispatchSemaphore(value: 0)
         URLSession.shared.dataTask(with: request) { data, response, error -> Void in
             guard let response = response as? HTTPURLResponse, let data = data else {
@@ -163,7 +163,7 @@ public final class Snippet {
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
                     decoder.dateDecodingStrategy = .formatted(dateFormatter)
                 }
-                let itemResponse = try decoder.decode(ItemResponse.self, from: data)
+                let itemResponse = try decoder.decode(Issues.self, from: data)
                 completion(itemResponse)
             } catch {
                 debugPrint(error)
@@ -174,7 +174,7 @@ public final class Snippet {
         semaphore.wait()
     }
 
-    public func generateOutput(_ itemResponse: ItemResponse, isShownDate: Bool = false) -> String {
+    public func generateOutput(_ itemResponse: Issues, isShownDate: Bool = false) -> String {
         let items = itemResponse.items.sorted(by: { $0.createdAt > $1.createdAt })
 
         var output = ""
