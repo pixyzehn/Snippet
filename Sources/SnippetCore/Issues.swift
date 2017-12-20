@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Issues: Codable {
+public struct Issues: Decodable {
     private enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"
         case incompleteResults = "incomplete_results"
@@ -18,7 +18,7 @@ public struct Issues: Codable {
     let incompleteResults: Bool
     let items: [Issue]
 
-    public struct Issue: Codable {
+    public struct Issue: Decodable {
         private enum CodingKeys: String, CodingKey {
             case id
             case number
