@@ -54,12 +54,13 @@ class SnippetTests: XCTestCase {
         let output =
         """
         Total count: 6
-        * [JohnSundell/Marathon] [#24](https://github.com/JohnSundell/Marathon/pull/24) Enable prefetching for scripts within Marathon
-        * [JohnSundell/Files] [#8](https://github.com/JohnSundell/Files/pull/8) Fix create file at path method
-        * [JohnSundell/Marathon] [#23](https://github.com/JohnSundell/Marathon/pull/23) Enable prefetching in build and package update
-        * [JohnSundell/Marathon] [#19](https://github.com/JohnSundell/Marathon/pull/19) Add `--all-packages` option in remove command
-        * [JohnSundell/Marathon] [#18](https://github.com/JohnSundell/Marathon/pull/18) Give suggestion to add a package if there is no such module
-        * [pixyzehn/pixyzehn.github.io] [#29](https://github.com/pixyzehn/pixyzehn.github.io/pull/29) Swifty Week 19
+
+        * [*Mon Apr 3*] [JohnSundell/Marathon] [#24](https://github.com/JohnSundell/Marathon/pull/24) Enable prefetching for scripts within Marathon
+        * [*Sun Apr 2*] [JohnSundell/Files] [#8](https://github.com/JohnSundell/Files/pull/8) Fix create file at path method
+        * [*Mon Apr 3*] [JohnSundell/Marathon] [#23](https://github.com/JohnSundell/Marathon/pull/23) Enable prefetching in build and package update
+        * [*Mon Apr 3*] [JohnSundell/Marathon] [#19](https://github.com/JohnSundell/Marathon/pull/19) Add `--all-packages` option in remove command
+        * [*Mon Apr 3*] [JohnSundell/Marathon] [#18](https://github.com/JohnSundell/Marathon/pull/18) Give suggestion to add a package if there is no such module
+        * [*Sun Apr 2*] [pixyzehn/pixyzehn.github.io] [#29](https://github.com/pixyzehn/pixyzehn.github.io/pull/29) Swifty Week 19
         """
         return output
     }
