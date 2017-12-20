@@ -23,12 +23,13 @@ Examples:
 
 $ snippet Org --week -2
 
-2017-08-07 ~ 2017-08-14 in Org
+2017-12-11 ~ 2017-12-18 in Org
 ---------------------------------------
 Total count: 3
-* [Org/repo] [#735](https://github.com/Org/repo/pull/735) Initial commit
-* [Org/repo] [#733](https://github.com/Org/repo/pull/733) Update README
-* [Org/repo] [#731](https://github.com/Org/repo/pull/731) Add new function
+
+* [*Mon Dec 18*] [Org/repo] [#735](https://github.com/Org/repo/pull/735) Initial commit
+* [*Fri Dec 15*] [Org/repo] [#733](https://github.com/Org/repo/pull/733) Update README
+* [*Fri Dec 15*] [Org/repo] [#731](https://github.com/Org/repo/pull/731) Add new function
 ```
 
 ## Requirements
