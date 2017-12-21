@@ -9,13 +9,16 @@ import Foundation
 public final class Snippet {
     private let arguments: [String]
 
+    private let accessTokenKey = "PERSONAL_ACCESS_TOKEN"
     private var accessToken: String? {
         get {
-            return UserDefaults.standard.object(forKey: "PERSONAL_ACCESS_TOKEN") as? String
+            let defaults = UserDefaults.standard
+            return defaults.string(forKey: accessTokenKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "PERSONAL_ACCESS_TOKEN")
-            UserDefaults.standard.synchronize()
+            let defaults = UserDefaults.standard
+            defaults.set(newValue, forKey: accessTokenKey)
+            defaults.synchronize()
         }
     }
 
@@ -171,8 +174,8 @@ public final class Snippet {
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
                     decoder.dateDecodingStrategy = .formatted(dateFormatter)
                 }
-                let itemResponse = try decoder.decode(Issues.self, from: data)
-                completion(itemResponse)
+                let issues = try decoder.decode(Issues.self, from: data)
+                completion(issues)
             } catch {
                 debugPrint(error)
                 completion(nil)
