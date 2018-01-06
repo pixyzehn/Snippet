@@ -4,22 +4,19 @@
 Quickly extract your specific Github PRs with links last week (or earlier than last week) to markdown formats.
 
 ```console
-$ snippet help
+$ snippet --help
 
 Snippet
 --------------
-Quickly extract your specific Github PRs with links last week (or earlier than last week) to markdown formats.
+OVERVIEW: Quickly extract your specific Github PRs with links last week (or earlier than last week) to markdown formats.
+Specify an organization in Github. (The default is your all repositories.)
 
-Usage:
-- Specify an organization in Github. (The default is your all repositories.)
-- Pass a past week number using the `--week`. (The default is `-1`)
-- Register your access token for repo (Full control of private repositories) in Github using the `--token` at first.
+USAGE: Snippet <organization>
 
-Examples:
-- snippet --week 0
-- snippet Org
-- snippet Org --week -4
-- snippet Org --token [YOUR_PERSONAL_ACCESS_TOKEN]
+OPTIONS:
+  --token   Register your access token for repo (Full control of private repositories) in Github using the `--token` at first.
+  --week    Pass a past week number using the `--week`. (The default is `-1`)
+  --help    Display available options
 
 $ snippet Org --week -2
 
