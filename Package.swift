@@ -5,13 +5,16 @@ import PackageDescription
 
 let package = Package(
     name: "Snippet",
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.1.0")
+    ],
     targets: [
         .target(
             name: "Snippet",
             dependencies: ["SnippetCore"]),
         .target(
-            name: "SnippetCore"),
+            name: "SnippetCore",
+            dependencies: ["Utility"]),
         .testTarget(
             name: "SnippetTests",
             dependencies: ["SnippetCore"])
