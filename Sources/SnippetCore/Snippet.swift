@@ -5,10 +5,9 @@
  */
 
 import Foundation
+import Utility
 
 public final class Snippet {
-    private let arguments: [String]
-
     private let accessTokenKey = "PERSONAL_ACCESS_TOKEN"
     private var accessToken: String? {
         get {
@@ -43,43 +42,44 @@ public final class Snippet {
         return calendar
     }()
 
-    public init(arguments: [String] = CommandLine.arguments) {
-        self.arguments = arguments
-    }
+    public init() {}
 
     public func run() throws {
-        /// Set default parameters.
-        var weekNumber = -1
-        var organization = ""
+        let weekNumber: Int
+        let organization: String
 
-        /// Check arguments and options.
-        var expectingWeekNumber = false
-        var expectingAccessToken = false
-        for argument in arguments[1..<arguments.count] {
-            if expectingWeekNumber {
-                weekNumber = Int(argument) ?? weekNumber
-            }
-            if expectingAccessToken {
-                accessToken = argument
-            }
+        var arguments = Array(ProcessInfo.processInfo.arguments.dropFirst())
 
-            switch argument {
-            case "help":
-                printHelp()
-                return
-            case let x where !x.hasPrefix("--") && !expectingWeekNumber && !expectingAccessToken:
-                organization = x
-            case "--week":
-                expectingWeekNumber = true
-                expectingAccessToken = false
-            case "--token":
-                expectingWeekNumber = false
-                expectingAccessToken = true
-            default:
-                expectingWeekNumber = false
-                expectingAccessToken = false
-                continue
-            }
+        if let org = arguments.first, !org.hasPrefix("--") {
+            organization = org
+            arguments = Array(arguments.dropFirst())
+        } else {
+            organization = ""
+        }
+
+        let parser = ArgumentParser(usage: "<organization>", overview: """
+            Quickly extract your specific Github PRs with links last week (or earlier than last week) to markdown formats.
+            Specify an organization in Github. (The default is your all repositories.)
+            """)
+
+        let tokenArgument = parser.add(option: "--token", kind: String.self, usage: """
+            Register your access token for repo (Full control of private repositories) in Github using the `--token` at first.
+            """)
+
+        let weekArgument = parser.add(option: "--week", kind: Int.self, usage: """
+            Pass a past week number using the `--week`. (The default is `-1`)
+            """)
+
+        let parsedArguments = try parser.parse(arguments)
+
+        if let week = parsedArguments.get(weekArgument) {
+            weekNumber = week
+        } else {
+            weekNumber = -1
+        }
+
+        if let token = parsedArguments.get(tokenArgument) {
+            accessToken = token
         }
 
         guard let accessToken = self.accessToken else {
@@ -209,27 +209,6 @@ public final class Snippet {
     }
 
     // - MARK: Private methods
-
-    private func printHelp() {
-        print(
-            """
-            Snippet
-            --------------
-            Quickly extract your specific Github PRs with links last week (or earlier than last week) to markdown formats.
-
-            Usage:
-            - Specify an organization in Github. (The default is your all repositories.)
-            - Pass a past week number using the `--week`. (The default is `-1`)
-            - Register your access token for repo (Full control of private repositories) in Github using the `--token` at first.
-
-            Examples:
-            - snippet --week 0
-            - snippet Org
-            - snippet Org --week -4
-            - snippet Org --token [YOUR_PERSONAL_ACCESS_TOKEN]
-            """
-        )
-    }
 
     private func printErrorForAccessToken() {
         print(
