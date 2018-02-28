@@ -55,6 +55,11 @@ $ swift build -c release -Xswiftc -static-stdlib
 $ cp -f .build/release/Snippet /usr/local/bin/Snippet
 ```
 
+### [Mint](https://github.com/yonaskolb/Mint)
+```console
+$ mint run pixyzehn/Snippet
+```
+
 On Linux
 
 ```console
