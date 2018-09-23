@@ -60,7 +60,7 @@ class SnippetTests: XCTestCase {
         * [*Mon Apr 3*] [JohnSundell/Marathon] [#23](https://github.com/JohnSundell/Marathon/pull/23) Enable prefetching in build and package update
         * [*Mon Apr 3*] [JohnSundell/Marathon] [#19](https://github.com/JohnSundell/Marathon/pull/19) Add `--all-packages` option in remove command
         * [*Mon Apr 3*] [JohnSundell/Marathon] [#18](https://github.com/JohnSundell/Marathon/pull/18) Give suggestion to add a package if there is no such module
-        * [*Sun Apr 2*] [pixyzehn/pixyzehn.github.io] [#29](https://github.com/pixyzehn/pixyzehn.github.io/pull/29) Swifty Week 19
+        * [*Sun Apr 2*] [pixyzehn/pixyzehn.com] [#29](https://github.com/pixyzehn/pixyzehn.com/pull/29) Swifty Week 19
         """
         return output
     }
