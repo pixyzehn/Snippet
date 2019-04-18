@@ -34,7 +34,6 @@ Total count: 3
 
 Snippet requires / supports the following environments:
 
-- Swift 5.0 or later
 - Git
 
 ## Installation
