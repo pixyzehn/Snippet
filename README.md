@@ -51,7 +51,7 @@ $ make
 
 ```console
 $ git clone git@github.com:pixyzehn/Snippet.git && cd Snippet
-$ swift build -c release -Xswiftc -static-stdlib
+$ swift build -c release
 $ cp -f .build/release/Snippet /usr/local/bin/Snippet
 ```
 
