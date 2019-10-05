@@ -1,6 +1,6 @@
 # Snippet
 [![SPM](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=for-the-badge)](https://github.com/apple/swift-package-manager)
-[![Build Status](https://img.shields.io/travis/pixyzehn/Snippet/master?style=for-the-badge)](https://travis-ci.com/pixyzehn/Snippet)
+[![Build Status](https://img.shields.io/travis/com/pixyzehn/Snippet/master?style=for-the-badge)](https://travis-ci.com/pixyzehn/Snippet)
 
 Quickly extract your specific Github PRs with links last week (or earlier than last week) and convert them into markdown formats.
 
