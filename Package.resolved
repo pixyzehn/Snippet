@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/apple/swift-llbuild.git",
         "state": {
           "branch": "master",
-          "revision": "ec16f6bda3d293f6af9c6fa1d2ef787cbbca7ecc",
+          "revision": "fb7ab0ddbd6020dd212a1dd931d46a9c94ea2d9c",
           "version": null
         }
       },
@@ -15,7 +15,7 @@
         "repositoryURL": "https://github.com/apple/swift-package-manager.git",
         "state": {
           "branch": "master",
-          "revision": "10ac0664bd3347755b9bb3dd8b765c02f950a952",
+          "revision": "209d3af0487c78ab20009818bab9e305fc9d62a1",
           "version": null
         }
       }

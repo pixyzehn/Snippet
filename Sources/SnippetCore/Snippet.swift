@@ -5,7 +5,7 @@
  */
 
 import Foundation
-import SPMUtility
+import TSCUtility
 
 public final class Snippet {
     private let accessTokenKey = "PERSONAL_ACCESS_TOKEN"
